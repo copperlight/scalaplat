@@ -3,15 +3,19 @@ lazy val scalaplat = project.in(file("."))
   .configure(BuildSettings.profile)
   .aggregate(
     `scalaplat-admin`,
+    `scalaplat-akka`,
+    `scalaplat-env`,
     `scalaplat-guice`,
+    `scalaplat-jmh`,
+    `scalaplat-json`,
     `scalaplat-launcher`,
     `scalaplat-module-admin`,
+    `scalaplat-module-akka`,
     `scalaplat-module-aws`,
     `scalaplat-module-aws2`,
     `scalaplat-module-dynconfig`,
     `scalaplat-module-jmxport`,
     `scalaplat-module-userservice`,
-    `scalaplat-env`,
     `scalaplat-servergroups`,
     `scalaplat-service`)
   .settings(BuildSettings.noPackaging: _*)
@@ -26,6 +30,23 @@ lazy val `scalaplat-admin` = project
     Dependencies.slf4jApi
   ))
 
+lazy val `scalaplat-akka` = project
+  .configure(BuildSettings.profile)
+  .dependsOn(`scalaplat-json`)
+  .settings(libraryDependencies ++= Seq(
+      Dependencies.akkaActor,
+      Dependencies.akkaSlf4j,
+      Dependencies.akkaStream,
+      Dependencies.iepService,
+      Dependencies.jsr250,
+      Dependencies.spectatorIpc,
+      Dependencies.akkaHttp,
+      Dependencies.typesafeConfig,
+      Dependencies.akkaHttpTestkit % "test",
+      Dependencies.akkaStreamTestkit % "test",
+      Dependencies.akkaTestkit % "test"
+  ))
+
 lazy val `scalaplat-guice` = project
   .configure(BuildSettings.profile)
   .dependsOn(`scalaplat-service`)
@@ -34,6 +55,22 @@ lazy val `scalaplat-guice` = project
     Dependencies.guiceMulti,
     Dependencies.slf4jApi,
     Dependencies.jsr250 % "test"
+  ))
+
+lazy val `scalaplat-jmh` = project
+  .configure(BuildSettings.profile)
+  .dependsOn(`scalaplat-json`)
+  .enablePlugins(pl.project13.scala.sbt.SbtJmh)
+
+lazy val `scalaplat-json` = project
+  .configure(BuildSettings.profile)
+  .settings(libraryDependencies ++= Seq(
+      Dependencies.jacksonCore,
+      Dependencies.jacksonJava8,
+      Dependencies.jacksonJsr310,
+      Dependencies.jacksonMapper,
+      Dependencies.jacksonScala,
+      Dependencies.jacksonSmile
   ))
 
 lazy val `scalaplat-launcher` = project
@@ -46,6 +83,15 @@ lazy val `scalaplat-module-admin` = project
     Dependencies.guiceCore,
     Dependencies.guiceMulti,
     Dependencies.slf4jApi
+  ))
+
+lazy val `scalaplat-module-akka` = project
+  .configure(BuildSettings.profile)
+  .dependsOn(`scalaplat-akka`)
+  .settings(libraryDependencies ++= Seq(
+      Dependencies.guiceCore,
+      Dependencies.guiceMulti,
+      Dependencies.iepGuice
   ))
 
 lazy val `scalaplat-module-aws` = project

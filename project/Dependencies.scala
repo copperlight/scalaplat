@@ -10,20 +10,25 @@ object Dependencies {
     val aws2       = "2.15.20"
     val graal      = "20.2.0"
     val guice      = "4.1.0"
+    val iep        = "2.6.3"
     val jackson    = "2.11.3"
     val log4j      = "2.13.3"
     val scala      = "2.13.4"
     val servo      = "0.13.0"
     val slf4j      = "1.7.30"
+    val spectator  = "0.120.0"
   }
 
   import Versions._
 
   val akkaActor          = "com.typesafe.akka" %% "akka-actor" % akka
+  val akkaHttp          = "com.typesafe.akka" %% "akka-http" % akkaHttpV
   val akkaHttpCaching    = "com.typesafe.akka" %% "akka-http-caching" % akkaHttpV
   val akkaHttpCore       = "com.typesafe.akka" %% "akka-http-core" % akkaHttpV
   val akkaHttpTestkit    = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV
   val akkaSlf4j          = "com.typesafe.akka" %% "akka-slf4j" % akka
+  val akkaStream        = "com.typesafe.akka" %% "akka-stream" % akka
+  val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit" % akka
   val akkaTestkit        = "com.typesafe.akka" %% "akka-testkit" % akka
   val awsAutoScaling     = "com.amazonaws" % "aws-java-sdk-autoscaling" % aws
   val awsCache           = "com.amazonaws" % "aws-java-sdk-elasticache" % aws
@@ -51,9 +56,16 @@ object Dependencies {
   val graalJsEngine      = "org.graalvm.js" % "js-scriptengine" % graal
   val guiceCore          = "com.google.inject" % "guice" % guice
   val guiceMulti         = "com.google.inject.extensions" % "guice-multibindings" % guice
+  val iepGuice          = "com.netflix.iep" % "iep-guice" % iep
+  val iepService         = "com.netflix.iep" % "iep-service" % iep
   val inject             = "javax.inject" % "javax.inject" % "1"
-  val jacksonCore        = "com.fasterxml.jackson.core" % "jackson-core" % jackson
-  val jacksonMapper      = "com.fasterxml.jackson.core" % "jackson-databind" % jackson
+  val jacksonAnno       = "com.fasterxml.jackson.core" % "jackson-annotations" % jackson
+  val jacksonCore       = "com.fasterxml.jackson.core" % "jackson-core" % jackson
+  val jacksonJava8      = "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % jackson
+  val jacksonJsr310     = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jackson
+  val jacksonMapper     = "com.fasterxml.jackson.core" % "jackson-databind" % jackson
+  val jacksonScala      = "com.fasterxml.jackson.module" %% "jackson-module-scala" % jackson
+  val jacksonSmile      = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-smile" % jackson
   val jodaTime           = "joda-time" % "joda-time" % "2.10.6"
   val jsonSchema         = "com.github.java-json-tools" % "json-schema-validator" % "2.2.14"
   val jsr250             = "javax.annotation" % "jsr250-api" % "1.0"
@@ -77,6 +89,10 @@ object Dependencies {
   val slf4jLog4j         = "org.slf4j" % "slf4j-log4j12" % slf4j
   val slf4jSimple        = "org.slf4j" % "slf4j-simple" % slf4j
   val snappy             = "org.xerial.snappy" % "snappy-java" % "1.1.7.7"
+  val spectatorApi      = "com.netflix.spectator" % "spectator-api" % spectator
+  val spectatorIpc      = "com.netflix.spectator" % "spectator-ext-ipc" % spectator
+  val spectatorLog4j    = "com.netflix.spectator" % "spectator-ext-log4j2" % spectator
+  val spectatorM2       = "com.netflix.spectator" % "spectator-reg-metrics2" % spectator
   val typesafeConfig     = "com.typesafe" % "config" % "1.4.0"
 }
 
