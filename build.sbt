@@ -11,7 +11,7 @@ lazy val scalaplat = project.in(file("."))
     `scalaplat-module-dynconfig`,
     `scalaplat-module-jmxport`,
     `scalaplat-module-userservice`,
-    `scalaplat-nflxenv`,
+    `scalaplat-env`,
     `scalaplat-servergroups`,
     `scalaplat-service`)
   .settings(BuildSettings.noPackaging: _*)
@@ -23,8 +23,7 @@ lazy val `scalaplat-admin` = project
     Dependencies.inject,
     Dependencies.jacksonCore,
     Dependencies.jacksonMapper,
-    Dependencies.slf4jApi,
-    Dependencies.spectatorIpc
+    Dependencies.slf4jApi
   ))
 
 lazy val `scalaplat-guice` = project
@@ -87,7 +86,7 @@ lazy val `scalaplat-module-aws2` = project
 
 lazy val `scalaplat-module-dynconfig` = project
   .configure(BuildSettings.profile)
-  .dependsOn(`scalaplat-nflxenv`, `scalaplat-module-admin`)
+  .dependsOn(`scalaplat-env`, `scalaplat-module-admin`)
   .settings(libraryDependencies ++= Seq(
     Dependencies.guiceCore,
     Dependencies.guiceMulti,

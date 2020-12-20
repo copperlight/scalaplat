@@ -6,17 +6,15 @@ object Dependencies {
   object Versions {
     val akka       = "2.6.10"
     val akkaHttpV  = "10.2.1"
-    val aws        = "1.11.877"
-    val aws2       = "2.15.7"
+    val aws        = "1.11.892"
+    val aws2       = "2.15.20"
+    val graal      = "20.2.0"
     val guice      = "4.1.0"
+    val jackson    = "2.11.3"
     val log4j      = "2.13.3"
     val scala      = "2.13.4"
     val servo      = "0.13.0"
     val slf4j      = "1.7.30"
-    val spectator  = "0.119.0"
-    val avroV      = "1.9.2"
-
-    val crossScala = Seq(scala)
   }
 
   import Versions._
