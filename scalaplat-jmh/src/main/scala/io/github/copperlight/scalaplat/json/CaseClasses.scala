@@ -1,6 +1,6 @@
 package io.github.copperlight.scalaplat.json
 
-import com.netflix.atlas.json.CaseClasses.Data
+import io.github.copperlight.scalaplat.json.CaseClasses.Data
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.State
