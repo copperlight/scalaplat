@@ -1,7 +1,5 @@
 package io.github.copperlight.scalaplat.json
 
-import java.util.concurrent.atomic.AtomicReferenceArray
-
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.BeanDescription
@@ -10,7 +8,9 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.netflix.atlas.json.Reflection.FieldInfo
+import io.github.copperlight.scalaplat.json.Reflection.FieldInfo
+
+import java.util.concurrent.atomic.AtomicReferenceArray
 
 /**
   * Custom deserializer for case classes. The primary difference is that it honors the

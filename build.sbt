@@ -70,7 +70,8 @@ lazy val `scalaplat-json` = project
       Dependencies.jacksonJsr310,
       Dependencies.jacksonMapper,
       Dependencies.jacksonScala,
-      Dependencies.jacksonSmile
+      Dependencies.jacksonSmile,
+      Dependencies.scalaReflect
   ))
 
 lazy val `scalaplat-launcher` = project

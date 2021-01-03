@@ -1,10 +1,5 @@
 package io.github.copperlight.scalaplat.json
 
-import java.io.InputStream
-import java.io.OutputStream
-import java.io.Reader
-import java.io.Writer
-
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.core._
 import com.fasterxml.jackson.core.json.JsonReadFeature
@@ -14,6 +9,11 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+
+import java.io.InputStream
+import java.io.OutputStream
+import java.io.Reader
+import java.io.Writer
 
 object Json {
 
@@ -70,7 +70,7 @@ object Json {
     mapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     mapper.registerModule(DefaultScalaModule)
-    mapper.registerModule(new AtlasModule)
+    mapper.registerModule(new ScalaplatModule)
     mapper.registerModule(new JavaTimeModule)
     mapper.registerModule(new Jdk8Module)
     mapper

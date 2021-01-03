@@ -1,8 +1,5 @@
 package io.github.copperlight.scalaplat.json
 
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.ParameterizedType
-
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.`type`.TypeReference
@@ -15,7 +12,9 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.AnnotationMap
 import com.fasterxml.jackson.databind.util.ClassUtil
 
-import scala.collection.compat.immutable.ArraySeq
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.ParameterizedType
+import scala.collection.immutable.ArraySeq
 import scala.reflect.runtime.currentMirror
 import scala.reflect.runtime.universe._
 
@@ -75,9 +74,10 @@ private[json] object Reflection {
     // companion object.
     val params = ctor.paramLists.head.zipWithIndex.map {
       case (p, i) =>
-        val dflt =
-          if (!p.asTerm.isParamWithDefault) None
-          else {
+        val dflt = {
+          if (!p.asTerm.isParamWithDefault) {
+            None
+          } else {
             val ts = instanceMirror.symbol.typeSignature
             val name = s"apply$$default$$${i + 1}"
             val dfltArg = ts.member(TermName(name))
@@ -86,6 +86,8 @@ private[json] object Reflection {
               Some(instanceMirror.reflectMethod(dfltArg.asMethod).apply())
             }
           }
+        }
+
         val name = p.name.toString
 
         // If there isn't an explicit alias with the annotations, then use the decoded
