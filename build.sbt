@@ -47,6 +47,14 @@ lazy val `scalaplat-akka` = project
       Dependencies.akkaTestkit % "test"
   ))
 
+lazy val `scalaplat-env` = project
+  .configure(BuildSettings.profile)
+  .settings(libraryDependencies ++= Seq(
+    Dependencies.slf4jApi,
+    Dependencies.typesafeConfig,
+    Dependencies.scalatest % "test"
+  ))
+
 lazy val `scalaplat-guice` = project
   .configure(BuildSettings.profile)
   .dependsOn(`scalaplat-service`)
@@ -156,13 +164,6 @@ lazy val `scalaplat-module-userservice` = project
     Dependencies.guiceCore,
     Dependencies.guiceMulti,
     Dependencies.jacksonMapper,
-    Dependencies.slf4jApi,
-    Dependencies.typesafeConfig
-  ))
-
-lazy val `scalaplat-env` = project
-  .configure(BuildSettings.profile)
-  .settings(libraryDependencies ++= Seq(
     Dependencies.slf4jApi,
     Dependencies.typesafeConfig
   ))
