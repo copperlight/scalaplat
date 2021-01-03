@@ -1,5 +1,19 @@
 package io.github.copperlight.scalaplat.json
 
+import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.Version
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.Module
+import com.fasterxml.jackson.databind.Module.SetupContext
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import org.scalatest.funsuite.AnyFunSuite
+
 class CaseClassDeserializerSuite extends AnyFunSuite {
 
   import CaseClassDeserializerSuite._

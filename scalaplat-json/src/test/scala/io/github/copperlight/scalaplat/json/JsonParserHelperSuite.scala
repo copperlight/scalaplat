@@ -1,14 +1,14 @@
 package io.github.copperlight.scalaplat.json
 
-import java.util.Random
-import java.util.UUID
-
 import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
 import org.scalatest.funsuite.AnyFunSuite
+
+import java.util.Random
+import java.util.UUID
 
 class JsonParserHelperSuite extends AnyFunSuite {
 
@@ -97,39 +97,41 @@ class JsonParserHelperSuite extends AnyFunSuite {
   }
 
   test("skipNext: complex object") {
-    val parser = Json.newJsonParser("""
-                                      |[
-                                      |  {
-                                      |    "af": {
-                                      |      "query": {
-                                      |        "q1": {
-                                      |          "q1": {
-                                      |            "k": "name",
-                                      |            "v": "discovery.status"
-                                      |          },
-                                      |          "q2": {
-                                      |            "k": "state",
-                                      |            "vs": [
-                                      |              "NOT_REGISTERED",
-                                      |              "DOWN"
-                                      |            ]
-                                      |          }
-                                      |        },
-                                      |        "q2": {
-                                      |          "k": "nf.app",
-                                      |          "v": "sentrytesterspringboot"
-                                      |        }
-                                      |      },
-                                      |      "offset": 0,
-                                      |      "grouped": false
-                                      |    },
-                                      |    "keys": [
-                                      |      "nf.node"
-                                      |    ],
-                                      |    "grouped": true
-                                      |  }
-                                      |]
-                                      |""".stripMargin)
+    val parser = Json.newJsonParser(
+      """
+      |[
+      |  {
+      |    "af": {
+      |      "query": {
+      |        "q1": {
+      |          "q1": {
+      |            "k": "name",
+      |            "v": "discovery.status"
+      |          },
+      |          "q2": {
+      |            "k": "state",
+      |            "vs": [
+      |              "NOT_REGISTERED",
+      |              "DOWN"
+      |            ]
+      |          }
+      |        },
+      |        "q2": {
+      |          "k": "nf.app",
+      |          "v": "sentrytesterspringboot"
+      |        }
+      |      },
+      |      "offset": 0,
+      |      "grouped": false
+      |    },
+      |    "keys": [
+      |      "nf.node"
+      |    ],
+      |    "grouped": true
+      |  }
+      |]
+      |""".stripMargin
+    )
     assert(parser.nextToken() === JsonToken.START_ARRAY)
     skipNext(parser)
     assert(parser.nextToken() === JsonToken.END_ARRAY)

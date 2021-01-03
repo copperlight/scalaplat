@@ -1,25 +1,24 @@
 package io.github.copperlight.scalaplat.json
 
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.core.JsonToken
+import com.fasterxml.jackson.databind.JsonNode
+import io.github.copperlight.scalaplat.json.Json._
+import io.github.copperlight.scalaplat.json.JsonSuiteObjectWithClass.ClassInObject
+import org.scalatest.funsuite.AnyFunSuite
+
+import java.lang.{Double => JDouble}
 import java.math.BigInteger
 import java.util
 import java.util.Optional
 import java.util.regex.Pattern
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.core.JsonToken
-import com.fasterxml.jackson.databind.JsonNode
-import org.scalatest.funsuite.AnyFunSuite
-
 /**
- * Test case for the capabilities we need from a json parser. Mostly to document what we are using
- * and ease transition to alternative libraries if we want to switch.
- */
+  * Test case for the capabilities we need from a json parser. Mostly to document what we are using
+  * and ease transition to alternative libraries if we want to switch.
+  */
 class JsonSuite extends AnyFunSuite {
-
-  import java.lang.{Double => JDouble}
-
-  import com.netflix.atlas.json.Json._
 
   test("garbage") {
     intercept[JsonParseException] { decode[Boolean]("true dklfjal;k;hfnklanf'") }
@@ -386,7 +385,6 @@ class JsonSuite extends AnyFunSuite {
 
   // CLDMTA-2174
   test("case class defined in object") {
-    import com.netflix.atlas.json.JsonSuiteObjectWithClass._
     val v = ClassInObject("a", 42)
     assert(encode(v) === """{"s":"a","v":42}""")
     assert(decode[ClassInObject](encode(v)) === v)
@@ -394,7 +392,6 @@ class JsonSuite extends AnyFunSuite {
 
   // CLDMTA-2174
   test("list of case class defined in object") {
-    import com.netflix.atlas.json.JsonSuiteObjectWithClass._
     val v = List(ClassInObject("a", 42))
     assert(encode(v) === """[{"s":"a","v":42}]""")
     assert(decode[List[ClassInObject]](encode(v)) === v)
@@ -485,10 +482,10 @@ object JsonSuiteObjectWithClass {
 case class JsonSuiteListDouble(vs: List[Double])
 
 case class JsonSuiteObjectWithDefaults(
-                                        foo: Int = 42,
-                                        bar: String = "abc",
-                                        values: List[String] = Nil
-                                      )
+  foo: Int = 42,
+  bar: String = "abc",
+  values: List[String] = Nil
+)
 
 case class JsonObjectWithSupport(v: Double) extends JsonSupport {
 
