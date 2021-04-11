@@ -1,4 +1,4 @@
-import sbt._
+import sbt.{Def, _}
 import sbt.Keys._
 
 object BuildSettings {
@@ -22,11 +22,11 @@ object BuildSettings {
   lazy val formatLicenseHeaders = taskKey[Unit]("Fix the license headers for all source files.")
 
   lazy val storeBintrayCredentials = taskKey[Unit]("Store bintray credentials.")
-  lazy val credentialsFile = Path.userHome / ".bintray" / ".credentials"
+  lazy val credentialsFile: File = Path.userHome / ".bintray" / ".credentials"
 
-  lazy val baseSettings = GitVersion.settings
+  lazy val baseSettings: Seq[Def.Setting[_]] = GitVersion.settings
 
-  lazy val buildSettings = baseSettings ++ Seq(
+  lazy val buildSettings: Seq[Def.Setting[_]] = baseSettings ++ Seq(
     organization := "com.netflix.iep",
     scalaVersion := Dependencies.Versions.scala,
     scalacOptions ++= BuildSettings.compilerFlags,

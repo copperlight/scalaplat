@@ -1,26 +1,37 @@
 package io.github.copperlight.scalaplat
 
-import org.scalatest.funsuite.AnyFunSuite
+import com.typesafe.scalalogging.StrictLogging
+import munit.FunSuite
 
-import java.lang.reflect.Modifier
+import scala.reflect.runtime.universe.MethodSymbol
 
-class CopperlightEnvironmentSuite extends AnyFunSuite {
+class CopperlightEnvironmentSuite extends FunSuite with StrictLogging {
 
   test("checkMethods") {
     val cl = Thread.currentThread.getContextClassLoader
     Thread.currentThread.setContextClassLoader(null)
 
     try {
-      for (field <- CopperlightEnvironment.getClass.getDeclaredFields) {
-        if (Modifier.isPublic(field.getModifiers)) {
-          try {
-            field.setAccessible(true)
-            field.get(CopperlightEnvironment)
-          } catch {
-            case e: Exception =>
-              throw new RuntimeException(s"failed to invoke ${field.getName}", e)
-          }
+      val mirror = scala.reflect.runtime.currentMirror
+
+      val accessors = mirror
+        .classSymbol(CopperlightEnvironment.getClass)
+        .toType
+        .members
+        .sorted
+        .collect {
+          case m: MethodSymbol if m.isGetter && m.isPublic => m
         }
+
+      val instance = mirror.reflect(CopperlightEnvironment)
+
+      logger.info(s"found ${accessors.length} public getters")
+      assert(accessors.nonEmpty)
+
+      accessors.foreach { a =>
+        val value = instance.reflectMethod(a).apply().toString
+        logger.info(s"$a: $value")
+        assert(value.nonEmpty)
       }
     } finally {
       Thread.currentThread.setContextClassLoader(cl)
