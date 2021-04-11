@@ -42,20 +42,20 @@ lazy val `scalaplat-akka` = project
       Dependencies.spectatorIpc,
       Dependencies.akkaHttp,
       Dependencies.typesafeConfig,
-      Dependencies.akkaHttpTestkit % "test",
-      Dependencies.akkaStreamTestkit % "test",
-      Dependencies.akkaTestkit % "test"
+      Dependencies.akkaHttpTestkit % Test,
+      Dependencies.akkaStreamTestkit % Test,
+      Dependencies.akkaTestkit % Test
   ))
 
 lazy val `scalaplat-env` = project
   .configure(BuildSettings.profile)
   .settings(libraryDependencies ++= Seq(
-    Dependencies.logback,
-    Dependencies.scalaLibrary,
-    Dependencies.scalaLogging,
     Dependencies.slf4jApi,
     Dependencies.typesafeConfig,
-    Dependencies.munit % Test
+    Dependencies.scalaLibrary % Provided,
+    Dependencies.scalaLogging % Provided,
+    Dependencies.munit % Test,
+    Dependencies.logback % Test
   ))
 
 lazy val `scalaplat-guice` = project
