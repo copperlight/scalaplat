@@ -6,10 +6,9 @@ import com.typesafe.scalalogging.StrictLogging
 import java.io.File
 
 /**
- * Helper for loading the Typesafe Config instance. In most cases, for apps using the scalaplat
- * libraries, this should be used instead of the [[ConfigFactory]]. It supports loading
- * additional configuration files based on the context via the `copperlight.scalaplat.include`
- * setting.
+ * Helper for loading an instance of Typesafe Config. In most cases, for apps using the scalaplat
+ * libraries, this should be used instead of the [[ConfigFactory]]. It supports loading additional
+ * configuration files based on the context via the `copperlight.scalaplat.include` setting.
  */
 object ConfigManager extends StrictLogging {
   private val CONFIG: Config = load()

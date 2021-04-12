@@ -54,8 +54,8 @@ lazy val `scalaplat-env` = project
     Dependencies.typesafeConfig,
     Dependencies.scalaLibrary % Provided,
     Dependencies.scalaLogging % Provided,
+    Dependencies.logback % Test,
     Dependencies.munit % Test,
-    Dependencies.logback % Test
   ))
 
 lazy val `scalaplat-guice` = project
@@ -65,7 +65,7 @@ lazy val `scalaplat-guice` = project
     Dependencies.guiceCore,
     Dependencies.guiceMulti,
     Dependencies.slf4jApi,
-    Dependencies.jsr250 % "test"
+    Dependencies.jsr250 % Test
   ))
 
 lazy val `scalaplat-jmh` = project
@@ -83,7 +83,7 @@ lazy val `scalaplat-json` = project
       Dependencies.jacksonScala,
       Dependencies.jacksonSmile,
       Dependencies.scalaReflect,
-      Dependencies.munit % "test"
+      Dependencies.munit % Test
   ))
 
 lazy val `scalaplat-launcher` = project
@@ -112,23 +112,23 @@ lazy val `scalaplat-module-aws` = project
   .dependsOn(`scalaplat-env`)
   .settings(libraryDependencies ++= Seq(
     Dependencies.awsCore,
-    Dependencies.awsAutoScaling % "test",
-    Dependencies.awsCache % "test",
-    Dependencies.awsCloudWatch % "test",
-    Dependencies.awsDynamoDB % "test",
-    Dependencies.awsEC2 % "test",
-    Dependencies.awsELB % "test",
-    Dependencies.awsELBv2 % "test",
-    Dependencies.awsEMR % "test",
-    Dependencies.awsLambda % "test",
-    Dependencies.awsRDS % "test",
-    Dependencies.awsRoute53 % "test",
     Dependencies.awsSTS,
     Dependencies.guiceCore,
     Dependencies.reactiveStreams,
     Dependencies.rxjava2,
     Dependencies.slf4jApi,
-    Dependencies.typesafeConfig
+    Dependencies.typesafeConfig,
+    Dependencies.awsAutoScaling % Test,
+    Dependencies.awsCache % Test,
+    Dependencies.awsCloudWatch % Test,
+    Dependencies.awsDynamoDB % Test,
+    Dependencies.awsEC2 % Test,
+    Dependencies.awsELB % Test,
+    Dependencies.awsELBv2 % Test,
+    Dependencies.awsEMR % Test,
+    Dependencies.awsLambda % Test,
+    Dependencies.awsRDS % Test,
+    Dependencies.awsRoute53 % Test
   ))
 
 lazy val `scalaplat-module-aws2` = project
@@ -136,7 +136,7 @@ lazy val `scalaplat-module-aws2` = project
   .dependsOn(`scalaplat-env`)
   .settings(libraryDependencies ++= Seq(
     Dependencies.aws2Core,
-    Dependencies.aws2EC2 % "test",
+    Dependencies.aws2EC2 % Test,
     Dependencies.aws2STS,
     Dependencies.guiceCore,
     Dependencies.slf4jApi,
@@ -177,7 +177,7 @@ lazy val `scalaplat-servergroups` = project
   .settings(libraryDependencies ++= Seq(
     Dependencies.jacksonCore,
     Dependencies.slf4jApi,
-    Dependencies.equalsVerifier % "test"
+    Dependencies.equalsVerifier % Test
   ))
 
 lazy val `scalaplat-service` = project
