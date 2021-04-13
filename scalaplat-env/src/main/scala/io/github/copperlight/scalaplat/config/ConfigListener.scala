@@ -12,12 +12,6 @@ import scala.jdk.CollectionConverters._
   */
 trait ConfigListener {
 
-  type JBoolean = java.lang.Boolean
-  type JDouble = java.lang.Double
-  type JInteger = java.lang.Integer
-  type JList[T] = java.util.List[T]
-  type JLong = java.lang.Long
-
   /**
     * Create a listener instance that will invoke the consumer when an update causes a
     * change for the specified path.
@@ -110,8 +104,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forStringList(property: String, consumer: Consumer[JList[String]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getStringList(name)
+  def forStringList(property: String, consumer: Consumer[List[String]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getStringList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -142,8 +136,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forBooleanList(property: String, consumer: Consumer[JList[JBoolean]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getBooleanList(name)
+  def forBooleanList(property: String, consumer: Consumer[List[Boolean]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getBooleanList(name).asScala.toList.map(Boolean.unbox(_))
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -174,8 +168,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forIntList(property: String, consumer: Consumer[JList[JInteger]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getIntList(name)
+  def forIntList(property: String, consumer: Consumer[List[Int]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getIntList(name).asScala.toList.map(Int.unbox(_))
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -206,8 +200,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forLongList(property: String, consumer: Consumer[JList[JLong]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getLongList(name)
+  def forLongList(property: String, consumer: Consumer[List[Long]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getLongList(name).asScala.toList.map(Long.unbox(_))
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -222,8 +216,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forBytes(property: String, consumer: Consumer[JLong]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getBytes(name)
+  def forBytes(property: String, consumer: Consumer[Long]): ConfigListener = {
+    val accessor = (config: Config, name: String) => Long.unbox(config.getBytes(name))
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -238,8 +232,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forBytesList(property: String, consumer: Consumer[JList[JLong]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getBytesList(name)
+  def forBytesList(property: String, consumer: Consumer[List[Long]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getBytesList(name).asScala.toList.map(Long.unbox(_))
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -270,8 +264,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forMemorySizeList(property: String, consumer: Consumer[JList[ConfigMemorySize]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getMemorySizeList(name)
+  def forMemorySizeList(property: String, consumer: Consumer[List[ConfigMemorySize]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getMemorySizeList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -302,8 +296,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forDoubleList(property: String, consumer: Consumer[JList[JDouble]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getDoubleList(name)
+  def forDoubleList(property: String, consumer: Consumer[List[Double]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getDoubleList(name).asScala.toList.map(Double.unbox(_))
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -334,8 +328,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forNumberList(property: String, consumer: Consumer[JList[Number]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getNumberList(name)
+  def forNumberList(property: String, consumer: Consumer[List[Number]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getNumberList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
 
@@ -366,8 +360,8 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forDurationList(property: String, consumer: Consumer[JList[Duration]]): ConfigListener = {
-    val accessor = (config: Config, name: String) => config.getDurationList(name)
+  def forDurationList(property: String, consumer: Consumer[List[Duration]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getDurationList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
 
