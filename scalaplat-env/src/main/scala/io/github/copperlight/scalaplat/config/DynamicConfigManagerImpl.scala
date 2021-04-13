@@ -1,34 +1,28 @@
 package io.github.copperlight.scalaplat.config
 
 import com.typesafe.config.Config
-import org.slf4j.LoggerFactory
+import com.typesafe.scalalogging.StrictLogging
 
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Default implementation of the dynamic config manager interface.
- */
-class DynamicConfigManagerImpl extends DynamicConfigManager {
-  private val LOGGER = LoggerFactory.getLogger(classOf[DynamicConfigManagerImpl])
+  * Default implementation of the dynamic config manager interface.
+  */
+class DynamicConfigManagerImpl(baseConfig: Config) extends DynamicConfigManager with StrictLogging {
+  type ConfigListenerSet = ConcurrentHashMap.KeySetView[ConfigListener, java.lang.Boolean]
 
-  private val baseConfig: Config = null
-  private var current: Config = null
-
-  private val listeners = ConcurrentHashMap.newKeySet
-
-  /** Create a new instance. */
-  def this(baseConfig: Config) {
-    this()
-    this.baseConfig = baseConfig
-    this.current = baseConfig
-  }
+  private var current: Config = baseConfig
+  private val listeners: ConfigListenerSet = ConcurrentHashMap.newKeySet
 
   override def get: Config = current
 
   override def setOverrideConfig(`override`: Config): Unit = {
     val previous = current
     current = `override`.withFallback(baseConfig).resolve
-    listeners.forEach((listener: ConfigListener) => invokeListener(listener, previous, current))
+
+    listeners.forEach { (listener: ConfigListener) =>
+      invokeListener(listener, previous, current)
+    }
   }
 
   private def invokeListener(listener: ConfigListener, previous: Config, current: Config): Unit = {
@@ -36,7 +30,7 @@ class DynamicConfigManagerImpl extends DynamicConfigManager {
       listener.onUpdate(previous, current)
     } catch {
       case e: Exception =>
-        LOGGER.warn("failed to update a listener", e)
+        logger.warn("failed to update a listener", e)
     }
   }
 

@@ -50,12 +50,11 @@ lazy val `scalaplat-akka` = project
 lazy val `scalaplat-env` = project
   .configure(BuildSettings.profile)
   .settings(libraryDependencies ++= Seq(
-    Dependencies.slf4jApi,
+    Dependencies.scalaLogging,
     Dependencies.typesafeConfig,
     Dependencies.scalaLibrary % Provided,
-    Dependencies.scalaLogging % Provided,
     Dependencies.logback % Test,
-    Dependencies.munit % Test,
+    Dependencies.munit % Test
   ))
 
 lazy val `scalaplat-guice` = project

@@ -1,13 +1,11 @@
 package io.github.copperlight.scalaplat.config
 
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigMemorySize
+import com.typesafe.config.{Config, ConfigMemorySize}
 
-import java.time.Duration
-import java.time.Period
+import java.time.{Duration, Period}
 import java.time.temporal.TemporalAmount
-import java.util.function.BiFunction
 import java.util.function.Consumer
+import scala.jdk.CollectionConverters._
 
 /**
   * Listener that will get invoked when the config is updated.
@@ -29,20 +27,20 @@ trait ConfigListener {
   def forPath(path: String, consumer: Consumer[Config]): ConfigListener = {
     (previous: Config, current: Config) =>
       {
-        val c1: Config = if (path == null) {
-          previous
+        val c1: Option[Config] = if (path == null) {
+          Some(previous)
         } else {
           ListenerUtils.getConfig(previous, path)
         }
 
-        val c2: Config = if (path == null) {
-          current
+        val c2: Option[Config] = if (path == null) {
+          Some(current)
         } else {
           ListenerUtils.getConfig(current, path)
         }
 
         if (ListenerUtils.hasChanged(c1, c2)) {
-          consumer.accept(c2)
+          c2.map(consumer.accept)
         }
       }
   }
@@ -59,7 +57,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forConfig(property: String, consumer: Consumer[Config]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getConfig(name))
+    val accessor = (config: Config, name: String) => config.getConfig(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -73,8 +72,9 @@ trait ConfigListener {
    * @return
    *   Listener instance that forwards changes for the property to the consumer.
    */
-  def forConfigList(property: String, consumer: Consumer[List[_ <: Config]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getConfigList(name))
+  def forConfigList(property: String, consumer: Consumer[List[Config]]): ConfigListener = {
+    val accessor = (config: Config, name: String) => config.getConfigList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -89,7 +89,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forString(property: String, consumer: Consumer[String]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getString(name))
+    val accessor = (config: Config, name: String) => config.getString(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -104,7 +105,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forStringList(property: String, consumer: Consumer[List[String]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getStringList(name))
+    val accessor = (config: Config, name: String) => config.getStringList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -119,7 +121,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forBoolean(property: String, consumer: Consumer[Boolean]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getBoolean(name))
+    val accessor = (config: Config, name: String) => config.getBoolean(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -134,7 +137,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forBooleanList(property: String, consumer: Consumer[List[Boolean]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getBooleanList(name))
+    val accessor = (config: Config, name: String) => config.getBooleanList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -149,7 +153,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forInt(property: String, consumer: Consumer[Integer]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getInt(name))
+    val accessor = (config: Config, name: String) => config.getInt(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -164,7 +169,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forIntList(property: String, consumer: Consumer[List[Integer]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getIntList(name))
+    val accessor = (config: Config, name: String) => config.getIntList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -179,7 +185,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forLong(property: String, consumer: Consumer[Long]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getLong(name))
+    val accessor = (config: Config, name: String) => config.getLong(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -194,7 +201,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forLongList(property: String, consumer: Consumer[List[Long]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getLongList(name))
+    val accessor = (config: Config, name: String) => config.getLongList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -209,7 +217,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forBytes(property: String, consumer: Consumer[Long]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getBytes(name))
+    val accessor = (config: Config, name: String) => config.getBytes(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -224,7 +233,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forBytesList(property: String, consumer: Consumer[List[Long]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getBytesList(name))
+    val accessor = (config: Config, name: String) => config.getBytesList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -239,7 +249,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forMemorySize(property: String, consumer: Consumer[ConfigMemorySize]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getMemorySize(name))
+    val accessor = (config: Config, name: String) => config.getMemorySize(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -254,7 +265,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forMemorySizeList(property: String, consumer: Consumer[List[ConfigMemorySize]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getMemorySizeList(name))
+    val accessor = (config: Config, name: String) => config.getMemorySizeList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -269,7 +281,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forDouble(property: String, consumer: Consumer[Double]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getDouble(name))
+    val accessor = (config: Config, name: String) => config.getDouble(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -284,7 +297,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forDoubleList(property: String, consumer: Consumer[List[Double]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getDoubleList(name))
+    val accessor = (config: Config, name: String) => config.getDoubleList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -299,7 +313,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forNumber(property: String, consumer: Consumer[Number]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getNumber(name))
+    val accessor = (config: Config, name: String) => config.getNumber(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -314,7 +329,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forNumberList(property: String, consumer: Consumer[List[Number]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getNumberList(name))
+    val accessor = (config: Config, name: String) => config.getNumberList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -329,7 +345,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forDuration(property: String, consumer: Consumer[Duration]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getDuration(name))
+    val accessor = (config: Config, name: String) => config.getDuration(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -344,7 +361,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forDurationList(property: String, consumer: Consumer[List[Duration]]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getDurationList(name))
+    val accessor = (config: Config, name: String) => config.getDurationList(name).asScala.toList
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -359,7 +377,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forPeriod(property: String, consumer: Consumer[Period]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getPeriod(name))
+    val accessor = (config: Config, name: String) => config.getPeriod(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -374,7 +393,8 @@ trait ConfigListener {
    *   Listener instance that forwards changes for the property to the consumer.
    */
   def forTemporal(property: String, consumer: Consumer[TemporalAmount]): ConfigListener = {
-    forConfigEntry(property, consumer, (config: Config, name: String) => config.getTemporal(name))
+    val accessor = (config: Config, name: String) => config.getTemporal(name)
+    forConfigEntry(property, consumer, accessor)
   }
 
   /**
@@ -398,9 +418,9 @@ trait ConfigListener {
     if (property == null) throw new NullPointerException("property cannot be null")
 
     (previous: Config, current: Config) => {
-      val v1 = ListenerUtils.getOrNull(previous, property, accessor)
-      val v2 = ListenerUtils.getOrNull(current, property, accessor)
-      if (ListenerUtils.hasChanged(v1, v2)) consumer.accept(v2)
+      val v1 = ListenerUtils.getOrNone(previous, property, accessor)
+      val v2 = ListenerUtils.getOrNone(current, property, accessor)
+      if (ListenerUtils.hasChanged(v1, v2)) v2.map(consumer.accept)
     }
   }
 

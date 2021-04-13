@@ -9,16 +9,6 @@ import com.typesafe.config.Config
 trait DynamicConfigManager {
 
   /**
-   * Create a new instance of a dynamic config manager.
-   *
-   * @param baseConfig
-   *   Base config layer that will be used as a fallback to the dynamic layer.
-   * @return
-   *   Config manager instance.
-   */
-  def create(baseConfig: Config) = new DynamicConfigManagerImpl(baseConfig)
-
-  /**
    * Returns the current config instance, i.e., override with fallback to the base config.
    */
   def get: Config
@@ -39,4 +29,16 @@ trait DynamicConfigManager {
    * Remove the listener so it will no longer get invoked.
    */
   def removeListener(listener: ConfigListener): Unit
+}
+
+object DynamicConfigManager {
+  /**
+   * Create a new instance of a dynamic config manager.
+   *
+   * @param baseConfig
+   *   Base config layer that will be used as a fallback to the dynamic layer.
+   * @return
+   *   Config manager instance.
+   */
+  def create(baseConfig: Config) = new DynamicConfigManagerImpl(baseConfig)
 }

@@ -11,10 +11,18 @@ import java.io.File
  * configuration files based on the context via the `copperlight.scalaplat.include` setting.
  */
 object ConfigManager extends StrictLogging {
-  private val CONFIG: Config = load()
+
+  private val CONFIG = load()
+  private val DYNAMIC = DynamicConfigManager.create(CONFIG)
 
   /** Get a cached copy of the config loaded from the default class loader. */
   def get: Config = CONFIG
+
+  /** Get the global dynamic config manager. */
+  def dynamicConfigManager: DynamicConfigManager = DYNAMIC
+
+  /** Get a snapshot of the current dynamic config instance. */
+  def dynamicConfig: Config = DYNAMIC.get
 
   /** Load config using the default class loader. */
   def load(): Config = load(pickClassLoader())

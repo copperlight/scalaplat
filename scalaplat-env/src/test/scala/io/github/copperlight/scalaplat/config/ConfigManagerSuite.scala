@@ -1,5 +1,6 @@
 package io.github.copperlight.scalaplat.config
 
+import com.typesafe.config.ConfigFactory
 import munit.FunSuite
 
 class ConfigManagerSuite extends FunSuite {
@@ -25,6 +26,7 @@ class ConfigManagerSuite extends FunSuite {
 
   test("null context class loader") {
     val cl = Thread.currentThread().getContextClassLoader
+
     try {
       Thread.currentThread().setContextClassLoader(null)
       val config = ConfigManager.load()
@@ -35,6 +37,11 @@ class ConfigManagerSuite extends FunSuite {
   }
 
   test("dynamic config") {
-    // TODO
+    assertEquals("classpath", ConfigManager.dynamicConfig.getString("scalaplat.value"))
+
+    ConfigManager.dynamicConfigManager
+      .setOverrideConfig(ConfigFactory.parseString("scalaplat.value = \"dynamic\""))
+
+    assertEquals("dynamic", ConfigManager.dynamicConfig.getString("scalaplat.value"))
   }
 }

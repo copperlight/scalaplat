@@ -13,10 +13,10 @@ object BuildSettings {
   val compilerFlags = Seq(
     "-deprecation",
     "-unchecked",
-    "-Xexperimental",
     "-Xlint:_,-infer-any",
     "-feature",
-    "-target:jvm-1.8")
+    "-target:jvm-1.8"
+  )
 
   lazy val checkLicenseHeaders = taskKey[Unit]("Check the license headers for all source files.")
   lazy val formatLicenseHeaders = taskKey[Unit]("Fix the license headers for all source files.")
