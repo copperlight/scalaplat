@@ -189,7 +189,7 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
     mgr.setOverrideConfig(config("a.b = 2"))
     assertEquals(2, value.get)
 
-    // due to unboxing, null Ints are 0
+    // for scala Ints, nulls become zero
     mgr.setOverrideConfig(config("a.b = null"))
     assertEquals(value.get, 0)
 
