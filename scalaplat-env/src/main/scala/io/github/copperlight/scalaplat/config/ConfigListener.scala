@@ -1,12 +1,9 @@
 package io.github.copperlight.scalaplat.config
 
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigMemorySize
+import com.typesafe.config.{Config, ConfigMemorySize}
 
+import java.time.{Duration, Period}
 import java.time.temporal.TemporalAmount
-import java.time.Duration
-import java.time.Period
-import java.util.function.Consumer
 import scala.jdk.CollectionConverters._
 
 /**
@@ -41,7 +38,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the path to the consumer.
     */
-  def forPath(path: String, consumer: Consumer[Config]): ConfigListener = {
+  def forPath(path: String, consumer: Config => Unit): ConfigListener = {
     (previous: Config, current: Config) =>
       {
         val c1: Option[Config] = if (path == null) {
@@ -57,7 +54,7 @@ object ConfigListener {
         }
 
         if (ListenerUtils.hasChanged(c1, c2)) {
-          c2.map(consumer.accept)
+          c2.map(consumer)
         }
       }
   }
@@ -73,7 +70,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forConfig(property: String, consumer: Consumer[Config]): ConfigListener = {
+  def forConfig(property: String, consumer: Config => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getConfig(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -89,7 +86,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forConfigList(property: String, consumer: Consumer[List[Config]]): ConfigListener = {
+  def forConfigList(property: String, consumer: List[Config] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getConfigList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
@@ -105,7 +102,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forString(property: String, consumer: Consumer[String]): ConfigListener = {
+  def forString(property: String, consumer: String => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getString(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -121,7 +118,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forStringList(property: String, consumer: Consumer[List[String]]): ConfigListener = {
+  def forStringList(property: String, consumer: List[String] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getStringList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
@@ -137,7 +134,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forBoolean(property: String, consumer: Consumer[Boolean]): ConfigListener = {
+  def forBoolean(property: String, consumer: Boolean => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getBoolean(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -153,7 +150,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forBooleanList(property: String, consumer: Consumer[List[Boolean]]): ConfigListener = {
+  def forBooleanList(property: String, consumer: List[Boolean] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) =>
       config.getBooleanList(name).asScala.toList.map(Boolean.unbox(_))
     forConfigEntry(property, consumer, accessor)
@@ -170,7 +167,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forInt(property: String, consumer: Consumer[Int]): ConfigListener = {
+  def forInt(property: String, consumer: Int => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getInt(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -186,7 +183,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forIntList(property: String, consumer: Consumer[List[Int]]): ConfigListener = {
+  def forIntList(property: String, consumer: List[Int] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) =>
       config.getIntList(name).asScala.toList.map(Int.unbox(_))
     forConfigEntry(property, consumer, accessor)
@@ -203,7 +200,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forLong(property: String, consumer: Consumer[Long]): ConfigListener = {
+  def forLong(property: String, consumer: Long => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getLong(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -219,7 +216,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forLongList(property: String, consumer: Consumer[List[Long]]): ConfigListener = {
+  def forLongList(property: String, consumer: List[Long] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) =>
       config.getLongList(name).asScala.toList.map(Long.unbox(_))
     forConfigEntry(property, consumer, accessor)
@@ -236,7 +233,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forBytes(property: String, consumer: Consumer[Long]): ConfigListener = {
+  def forBytes(property: String, consumer: Long => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => Long.unbox(config.getBytes(name))
     forConfigEntry(property, consumer, accessor)
   }
@@ -252,7 +249,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forBytesList(property: String, consumer: Consumer[List[Long]]): ConfigListener = {
+  def forBytesList(property: String, consumer: List[Long] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) =>
       config.getBytesList(name).asScala.toList.map(Long.unbox(_))
     forConfigEntry(property, consumer, accessor)
@@ -269,7 +266,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forMemorySize(property: String, consumer: Consumer[ConfigMemorySize]): ConfigListener = {
+  def forMemorySize(property: String, consumer: ConfigMemorySize => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getMemorySize(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -287,7 +284,7 @@ object ConfigListener {
     */
   def forMemorySizeList(
     property: String,
-    consumer: Consumer[List[ConfigMemorySize]]
+    consumer: List[ConfigMemorySize] => Unit
   ): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getMemorySizeList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
@@ -304,7 +301,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forDouble(property: String, consumer: Consumer[Double]): ConfigListener = {
+  def forDouble(property: String, consumer: Double => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getDouble(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -320,7 +317,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forDoubleList(property: String, consumer: Consumer[List[Double]]): ConfigListener = {
+  def forDoubleList(property: String, consumer: List[Double] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) =>
       config.getDoubleList(name).asScala.toList.map(Double.unbox(_))
     forConfigEntry(property, consumer, accessor)
@@ -337,7 +334,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forNumber(property: String, consumer: Consumer[Number]): ConfigListener = {
+  def forNumber(property: String, consumer: Number => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getNumber(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -353,7 +350,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forNumberList(property: String, consumer: Consumer[List[Number]]): ConfigListener = {
+  def forNumberList(property: String, consumer: List[Number] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getNumberList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
@@ -369,7 +366,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forDuration(property: String, consumer: Consumer[Duration]): ConfigListener = {
+  def forDuration(property: String, consumer: Duration => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getDuration(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -385,7 +382,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forDurationList(property: String, consumer: Consumer[List[Duration]]): ConfigListener = {
+  def forDurationList(property: String, consumer: List[Duration] => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getDurationList(name).asScala.toList
     forConfigEntry(property, consumer, accessor)
   }
@@ -401,7 +398,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forPeriod(property: String, consumer: Consumer[Period]): ConfigListener = {
+  def forPeriod(property: String, consumer: Period => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getPeriod(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -417,7 +414,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forTemporal(property: String, consumer: Consumer[TemporalAmount]): ConfigListener = {
+  def forTemporal(property: String, consumer: TemporalAmount => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getTemporal(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -437,7 +434,7 @@ object ConfigListener {
     */
   def forConfigEntry[T](
     property: String,
-    consumer: Consumer[T],
+    consumer: T => Unit,
     accessor: (Config, String) => T
   ): ConfigListener = {
     if (property == null) throw new NullPointerException("property cannot be null")
@@ -445,7 +442,7 @@ object ConfigListener {
     (previous: Config, current: Config) => {
       val v1 = ListenerUtils.getOrNone(previous, property, accessor)
       val v2 = ListenerUtils.getOrNone(current, property, accessor)
-      if (ListenerUtils.hasChanged(v1, v2)) v2.map(consumer.accept)
+      if (ListenerUtils.hasChanged(v1, v2)) v2.map(consumer)
     }
   }
 }

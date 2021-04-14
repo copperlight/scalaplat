@@ -7,7 +7,6 @@ import munit.FunSuite
 import java.time.temporal.TemporalAmount
 import java.time.{Duration, Period}
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
-import java.util.function.Consumer
 
 class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
 
@@ -69,7 +68,7 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
     val value = new AtomicInteger
     val mgr = newInstance(config("a.b = 1"))
 
-    val consumer: Consumer[Config] = (c: Config) => {
+    val consumer: Config => Unit = (c: Config) => {
         val v = c.getInt("b")
         if (v == value.get) fail("listener invoked without a change in the value")
         value.set(v)
@@ -107,12 +106,16 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
     val mgr: DynamicConfigManager = newInstance(config("a.b = 1"))
     mgr.addListener(ConfigListener.forConfig("a", (c: Config) => value.set(c)))
 
+    logger.info(s"${mgr.get}")
+    logger.info(s"${value.get}")
     mgr.setOverrideConfig(config("a.b = 2"))
     assertEquals(2, value.get.getInt("b"))
 
+    logger.info(s"${value.get}")
     mgr.setOverrideConfig(config("a.b = null"))
     assertEquals(value.get.hasPath("b"), false)
 
+    logger.info(s"${value.get}")
     mgr.setOverrideConfig(config("a = null"))
     assertEquals(value.get, null)
 
