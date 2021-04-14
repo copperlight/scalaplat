@@ -166,7 +166,7 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
   test("boolean listener") {
     val value: AtomicReference[Boolean] = new AtomicReference[Boolean]
     val mgr: DynamicConfigManager = newInstance(config("a.b = false"))
-    mgr.addListener(ConfigListener.forBoolean("a.b", (b: Boolean) => value.set(b)))
+    mgr.addListener(ConfigListener.forBoolean("a.b", b => value.set(b.asInstanceOf[Boolean])))
     assertEquals(value.get, false)
     mgr.setOverrideConfig(config("a.b = true"))
     assertEquals(value.get, true)
@@ -184,17 +184,18 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
   test("int listener") {
     val value: AtomicReference[Int] = new AtomicReference[Int]
     val mgr: DynamicConfigManager = newInstance(config("a.b = 1"))
-    mgr.addListener(ConfigListener.forInt("a.b", (i: Int) => value.set(i)))
+    mgr.addListener(ConfigListener.forInt("a.b", i => value.set(i.asInstanceOf[Int])))
 
     mgr.setOverrideConfig(config("a.b = 2"))
     assertEquals(2, value.get)
 
-    // TODO - fix type mismatches
-//    mgr.setOverrideConfig(config("a.b = null"))
-//    assertEquals(value.get, null)
-//
-//    mgr.setOverrideConfig(config("a.b = \"foo\"")) // fails to update, wrong type
-//    assertEquals(value.get, null)
+    // due to unboxing, null Ints are 0
+    mgr.setOverrideConfig(config("a.b = null"))
+    assertEquals(value.get, 0)
+
+    // wrong type fails to update - logs warning, but does not throw
+    mgr.setOverrideConfig(config("a.b = \"foo\""))
+    assertEquals(value.get, 0)
   }
 
   test("int list listener") {
@@ -209,7 +210,7 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
   test("long listener") {
     val value: AtomicReference[Long] = new AtomicReference[Long]
     val mgr: DynamicConfigManager = newInstance(config("a.b = 1"))
-    mgr.addListener(ConfigListener.forLong("a.b", (l: Long) => value.set(l)))
+    mgr.addListener(ConfigListener.forLong("a.b", l => value.set(l.asInstanceOf[Long])))
     assertEquals(1L, value.get)
     mgr.setOverrideConfig(config("a.b = 2"))
     assertEquals(2L, value.get)
@@ -227,7 +228,7 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
   test("bytes listener") {
     val value: AtomicReference[Long] = new AtomicReference[Long]
     val mgr: DynamicConfigManager = newInstance(config("a.b = 1k"))
-    mgr.addListener(ConfigListener.forBytes("a.b", (l : Long) => value.set(l)))
+    mgr.addListener(ConfigListener.forBytes("a.b", l => value.set(l.asInstanceOf[Long])))
     assertEquals(1024L, value.get)
     mgr.setOverrideConfig(config("a.b = 2k"))
     assertEquals(2048L, value.get)
@@ -263,7 +264,7 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
   test("double listener") {
     val value: AtomicReference[Double] = new AtomicReference[Double]
     val mgr: DynamicConfigManager = newInstance(config("a.b = 1.0"))
-    mgr.addListener(ConfigListener.forDouble("a.b", (d: Double) => value.set(d)))
+    mgr.addListener(ConfigListener.forDouble("a.b", d => value.set(d.asInstanceOf[Double])))
     assertEquals(1.0, value.get)
     mgr.setOverrideConfig(config("a.b = 2.0"))
     assertEquals(2.0, value.get)
