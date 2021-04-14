@@ -54,7 +54,7 @@ object ConfigListener {
         }
 
         if (ListenerUtils.hasChanged(c1, c2)) {
-          c2.map(consumer)
+          c2.fold(consumer(null))(consumer)
         }
       }
   }
