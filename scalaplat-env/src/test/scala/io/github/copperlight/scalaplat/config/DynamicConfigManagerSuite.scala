@@ -106,16 +106,12 @@ class DynamicConfigManagerSuite extends FunSuite with StrictLogging {
     val mgr: DynamicConfigManager = newInstance(config("a.b = 1"))
     mgr.addListener(ConfigListener.forConfig("a", (c: Config) => value.set(c)))
 
-    logger.info(s"${mgr.get}")
-    logger.info(s"${value.get}")
     mgr.setOverrideConfig(config("a.b = 2"))
     assertEquals(2, value.get.getInt("b"))
 
-    logger.info(s"${value.get}")
     mgr.setOverrideConfig(config("a.b = null"))
     assertEquals(value.get.hasPath("b"), false)
 
-    logger.info(s"${value.get}")
     mgr.setOverrideConfig(config("a = null"))
     assertEquals(value.get, null)
 
