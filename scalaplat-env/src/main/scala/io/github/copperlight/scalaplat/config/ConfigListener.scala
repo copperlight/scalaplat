@@ -134,7 +134,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forBoolean(property: String, consumer: Boolean => Unit): ConfigListener = {
+  def forBoolean(property: String, consumer: Any => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getBoolean(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -167,7 +167,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forInt(property: String, consumer: Int => Unit): ConfigListener = {
+  def forInt(property: String, consumer: Any => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getInt(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -200,7 +200,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forLong(property: String, consumer: Long => Unit): ConfigListener = {
+  def forLong(property: String, consumer: Any => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getLong(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -233,7 +233,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forBytes(property: String, consumer: Long => Unit): ConfigListener = {
+  def forBytes(property: String, consumer: Any => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => Long.unbox(config.getBytes(name))
     forConfigEntry(property, consumer, accessor)
   }
@@ -301,7 +301,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forDouble(property: String, consumer: Double => Unit): ConfigListener = {
+  def forDouble(property: String, consumer: Any => Unit): ConfigListener = {
     val accessor = (config: Config, name: String) => config.getDouble(name)
     forConfigEntry(property, consumer, accessor)
   }
@@ -432,7 +432,7 @@ object ConfigListener {
     * @return
     *   Listener instance that forwards changes for the property to the consumer.
     */
-  def forConfigEntry[T](
+  def forConfigEntry[T >: Null](
     property: String,
     consumer: T => Unit,
     accessor: (Config, String) => T
@@ -442,7 +442,7 @@ object ConfigListener {
     (previous: Config, current: Config) => {
       val v1 = ListenerUtils.getOrNone(previous, property, accessor)
       val v2 = ListenerUtils.getOrNone(current, property, accessor)
-      if (ListenerUtils.hasChanged(v1, v2)) v2.map(consumer)
+      if (ListenerUtils.hasChanged(v1, v2)) v2.fold(consumer(null))(consumer)
     }
   }
 }
